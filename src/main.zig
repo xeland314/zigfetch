@@ -4,7 +4,7 @@ const builtin = @import("builtin");
 const logo_pixels = @embedFile("logo.raw");
 const size = 16;
 
-// Estructura para sysinfo (solo Linux)
+// Estructura para sysinfo (solo Linux) - NO SE NECESITA EN WASM WASI
 const sysinfo_t = extern struct {
     uptime: i64,
     loads: [3]u64,
@@ -34,27 +34,7 @@ pub export fn main() void {
     const os_name = if (is_wasm) "Web Browser (WASM)" else getLinuxOSName(allocator) catch "Linux";
 
     var ram_str: [64]u8 = undefined;
-    const ram_display = if (is_wasm) blk: {
-        const pages = @wasmMemorySize(0);
-        const total_mb = (pages * 64 * 1024) / 1024 / 1024;
-        break :blk std.fmt.bufPrint(&ram_str, "{d} MB (WASM)", .{total_mb}) catch "Error RAM";
-    } else blk: {
-        var info: sysinfo_t = undefined;
-        if (std.os.linux.syscall1(.sysinfo, @intFromPtr(&info)) == 0) {
-            const unit: f64 = @floatFromInt(if (info.mem_unit == 0) 1 else info.mem_unit);
-
-            // Convertimos a float para poder tener decimales en los GB
-            const total_f: f64 = @floatFromInt(info.totalram);
-            const free_f: f64 = @floatFromInt(info.freeram);
-
-            const total_gb = (total_f * unit) / 1024 / 1024 / 1024;
-            const used_gb = ((total_f - free_f) * unit) / 1024 / 1024 / 1024;
-
-            break :blk std.fmt.bufPrint(&ram_str, "{d:.2}GB / {d:.2}GB", .{ used_gb, total_gb }) catch "Error";
-        }
-        break :blk "Unknown";
-    };
-
+    
     // --- RENDER ---
     var y: usize = 0;
     while (y < size) : (y += 1) {
