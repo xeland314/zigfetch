@@ -25,15 +25,30 @@ pub export fn main() void {
     var ram_buf: [64]u8 = undefined;
     const ram_display = ram_info.getRamDisplay(&ram_buf);
 
-    const lang = if (is_wasm) browser_info.getSystemLanguage(allocator) else "unknown";
+    const lang = if (is_wasm)
+        browser_info.getSystemLanguage(allocator)
+    else
+        os_info.getLanguage(allocator);
 
-    const resolution = if (is_wasm) browser_info.getScreenResolution(allocator) else "unknown";
+    const resolution = if (is_wasm)
+        browser_info.getScreenResolution(allocator)
+    else
+        os_info.getResolution(allocator);
 
-    const cpu_cores = if (is_wasm) browser_info.getCpuCoreCount() else 0;
+    const cpu_cores = if (is_wasm)
+        browser_info.getCpuCoreCount()
+    else
+        os_info.getCpuCores();
 
-    const domain = if (is_wasm) browser_info.getDomainName(allocator) else "unknown";
+    const domain = if (is_wasm)
+        browser_info.getDomainName(allocator)
+    else
+        os_info.getDomain(allocator);
 
-    const gpu = if (is_wasm) browser_info.getGpuRenderer(allocator) else "unknown";
+    const gpu = if (is_wasm)
+        browser_info.getGpuRenderer(allocator)
+    else
+        os_info.getGpu(allocator);
 
     // --- RENDER ---
     var y: usize = 0;
