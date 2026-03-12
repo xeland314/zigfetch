@@ -25,6 +25,8 @@ pub export fn main() void {
     var ram_buf: [64]u8 = undefined;
     const ram_display = ram_info.getRamDisplay(&ram_buf);
 
+    const lang = if (is_wasm) browser_info.getSystemLanguage(allocator) else "unknown";
+
     // --- RENDER ---
     var y: usize = 0;
     while (y < size) : (y += 1) {
@@ -47,6 +49,7 @@ pub export fn main() void {
             2 => _ = stdout.write("------------") catch {},
             3 => stdout.print("\x1b[1;32m󰋜 OS: \x1b[0m{s}", .{os_name}) catch {},
             4 => stdout.print("\x1b[1;32m󰍛 RAM:\x1b[0m {s}", .{ram_display}) catch {},
+            5 => stdout.print("\x1b[1;32m󰗊 Lang:\x1b[0m {s}", .{lang}) catch {},
             13 => logo.printColorPalette(stdout, false),
             14 => logo.printColorPalette(stdout, true),
             else => {},
