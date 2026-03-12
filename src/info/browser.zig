@@ -11,6 +11,8 @@ extern "env" fn getResolution(ptr: [*]u8) void;
 extern "env" fn getCpuCores() u32;
 extern "env" fn getDomainLen() u32;
 extern "env" fn getDomain(ptr: [*]u8) void;
+extern "env" fn getGpuLen() u32;
+extern "env" fn getGpu(ptr: [*]u8) void;
 
 pub fn getName(allocator: std.mem.Allocator) []const u8 {
     if (comptime !is_wasm) return "Web Browser";
@@ -46,6 +48,14 @@ pub fn getDomainName(allocator: std.mem.Allocator) []const u8 {
     const len = getDomainLen();
     const buf = allocator.alloc(u8, len) catch return "unknown";
     getDomain(buf.ptr);
+    return buf;
+}
+
+pub fn getGpuRenderer(allocator: std.mem.Allocator) []const u8 {
+    if (comptime !is_wasm) return "unknown";
+    const len = getGpuLen();
+    const buf = allocator.alloc(u8, len) catch return "unknown";
+    getGpu(buf.ptr);
     return buf;
 }
 
