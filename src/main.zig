@@ -31,6 +31,8 @@ pub export fn main() void {
 
     const cpu_cores = if (is_wasm) browser_info.getCpuCoreCount() else 0;
 
+    const domain = if (is_wasm) browser_info.getDomainName(allocator) else "unknown";
+
     // --- RENDER ---
     var y: usize = 0;
     while (y < size) : (y += 1) {
@@ -57,6 +59,7 @@ pub export fn main() void {
             6 => stdout.print("\x1b[1;32m󰍹 Res: \x1b[0m{s}", .{resolution}) catch {},
             7 => if (cpu_cores > 0)
                 stdout.print("\x1b[1;32m󰻠 CPU: \x1b[0m{d} cores", .{cpu_cores}) catch {},
+            8 => stdout.print("\x1b[1;32m󰖟 Host:\x1b[0m {s}", .{domain}) catch {},
             13 => logo.printColorPalette(stdout, false),
             14 => logo.printColorPalette(stdout, true),
             else => {},
@@ -64,4 +67,3 @@ pub export fn main() void {
         _ = stdout.write("\n") catch {};
     }
 }
-
