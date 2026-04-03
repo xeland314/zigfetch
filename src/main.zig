@@ -12,7 +12,9 @@ const size = 16;
 
 pub export fn main() void {
     const is_wasm = builtin.target.cpu.arch == .wasm32;
-    const stdout = std.io.getStdOut().writer();
+    var stdout_buf: [4096]u8 = undefined;
+    var stdout_writer = std.fs.File.stdout().writer(&stdout_buf);
+    const stdout = &stdout_writer.interface;
     var arena = std.heap.ArenaAllocator.init(std.heap.page_allocator);
     defer arena.deinit();
     const allocator = arena.allocator();
@@ -84,5 +86,5 @@ pub export fn main() void {
         }
         _ = stdout.write("\n") catch {};
     }
+    _ = stdout.flush() catch {};
 }
-
