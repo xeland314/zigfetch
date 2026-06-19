@@ -133,7 +133,7 @@ fn renderInfoRow(
     stdout: anytype,
 ) void {
     switch (y) {
-        1 => stdout.print("\x1b[1;36m󰭹 user\x1b[0m@\x1b[1;36mportfolio\x1b[0m", .{}) catch {},
+        1 => stdout.print("\x1b[1;36m󰭹 xeland314\x1b[0m@\x1b[1;36mportfolio\x1b[0m", .{}) catch {},
         2 => _ = stdout.write("------------") catch {},
         3 => stdout.print("\x1b[1;32m󰋜 OS: \x1b[0m{s}", .{os_name}) catch {},
         4 => stdout.print("\x1b[1;32m󰍛 RAM:\x1b[0m {s}", .{ram_display}) catch {},
@@ -147,3 +147,4 @@ fn renderInfoRow(
         else => {},
     }
 }
+
